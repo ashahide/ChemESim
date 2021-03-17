@@ -58,6 +58,7 @@ class ProcessControlandModeling:
         self.ResponseType      = Type
         self.Output            = Magnitude*Output
         self.Time              = Time
+        self.InputTimeDefined  = T
 
 
         return Magnitude*Output, Time
@@ -106,16 +107,199 @@ class ProcessControlandModeling:
         return Frequencies, Damping, Poles
 
 
-    def PlotResults(self, Output2 = None, Input2Type = None, Input2Magnitude = None, Sys2TimeDelay = None, \
-                          Output3 = None, Input3Type = None, Input3Magnitude = None, Sys3TimeDelay = None, \
-                          Output4 = None, Input4Type = None, Input4Magnitude = None, Sys4TimeDelay = None, \
+    def PlotResults(self, Output2 = None, Input2Type = None, Input2Magnitude = None, Input2TimeDefined = None, Sys2TimeDelay = None, \
+                          Output3 = None, Input3Type = None, Input3Magnitude = None, Input3TimeDefined = None, Sys3TimeDelay = None, \
+                          Output4 = None, Input4Type = None, Input4Magnitude = None, Input4TimeDefined = None, Sys4TimeDelay = None, \
+                          Output5 = None, Input5Type = None, Input5Magnitude = None, Input5TimeDefined = None, Sys5TimeDelay = None, \
+                          Output6 = None, Input6Type = None, Input6Magnitude = None, Input6TimeDefined = None, Sys6TimeDelay = None, \
                           YUnit = None):
+
+        def FindMaxNonZero(a):
+            return a[int(max([i for i, e in enumerate(a) if e != 0]))]
 
         if self.TimeDelay == None:
             self.TimeDelay = 0
-
+  
         import matplotlib.pyplot as plt
+        # plt.style.use('ggplot')
 
+        """
+        Figure 1: Plot individual systems wit inputs
+        """
+        plt.figure(figsize=(14,12))
+
+        plt.tight_layout()
+
+        h = 2
+
+        plt.subplot(3,2,1)
+
+        if self.InputFunction == 'Square':
+            plt.hlines(self.ResponseMagnitude, 0, FindMaxNonZero(self.InputTimeDefined), label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
+
+            plt.vlines(0, 0, self.ResponseMagnitude)
+            plt.vlines(FindMaxNonZero(self.InputTimeDefined), 0, self.ResponseMagnitude)
+        
+        elif self.InputFunction == 'Impulse':
+            plt.vlines(0, 0, self.ResponseMagnitude, label = 'Impulse Input, Magnitude = {}'.format(self.ResponseMagnitude))
+
+        else:
+            plt.hlines(self.ResponseMagnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
+            try:
+                plt.vlines(self.InputTimeDefined[0], 0, self.ResponseMagnitude)
+            except:
+                plt.vlines(0, 0, self.ResponseMagnitude)
+
+        
+        plt.plot(self.Time, self.Output, color = 'r', label = 'TF 1 (Time Delay = {})'.format(self.TimeDelay))
+
+        plt.xlabel('Time')
+        plt.ylabel(YUnit + ' (Deviation)')
+        plt.legend(loc = 'best')
+
+        if Output2 is not None:
+            plt.subplot(3,2,h)
+
+            if Input2Type == 'Square':
+                plt.hlines(Input2Magnitude, 0, FindMaxNonZero(Input2TimeDefined), label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
+
+                plt.vlines(0, 0, Input2Magnitude)
+                plt.vlines(FindMaxNonZero(Input2TimeDefined), 0, Input2Magnitude)
+
+            elif Input2Type == 'Impulse':
+                plt.vlines(0, 0, Input2Magnitude)
+
+            else:
+                plt.hlines(Input2Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
+
+                try:
+                    plt.vlines(Input2TimeDefined[0], 0, Input2Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input2Magnitude))
+                except:
+                    plt.vlines(0, 0, Input2Magnitude)                
+
+            
+            plt.plot(self.Time, Output2, color = 'r',  label = 'TF 2 (Time Delay = {})'.format(Sys2TimeDelay))
+
+            plt.xlabel('Time')
+            plt.ylabel(YUnit + ' (Deviation)')
+            plt.legend(loc = 'best')
+
+            h += 1
+
+        if Output3 is not None:
+            plt.subplot(3,2,h)
+            
+            if Input3Type == 'Square':
+                plt.hlines(Input3Magnitude, 0, FindMaxNonZero(Input3TimeDefined), label = '{} Input, Magnitude = {}'.format(Input3Type, Input3Magnitude))
+
+                plt.vlines(0, 0, Input3Magnitude)
+                plt.vlines(FindMaxNonZero(Input3TimeDefined), 0, Input3Magnitude)
+
+            elif Input3Type == 'Impulse':
+                plt.vlines(0, 0, Input3Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input3Magnitude))
+            
+            else:
+                try:
+                    plt.vlines(Input3TimeDefined[0], 0, Input3Magnitude)
+                except:
+                    plt.vlines(0, 0, Input3Magnitude)
+
+            plt.plot(self.Time, Output3, color = 'r',  label = 'TF 3 (Time Delay = {})'.format(Sys3TimeDelay))
+
+            plt.xlabel('Time')
+            plt.ylabel(YUnit + ' (Deviation)')
+            plt.legend(loc = 'best')
+
+            h += 1
+
+        if Output4 is not None:
+            plt.subplot(3,2,h)
+
+            if Input4Type == 'Square':
+                plt.hlines(Input4Magnitude, 0, FindMaxNonZero(Input4TimeDefined), label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
+
+                plt.vlines(0, 0, Input4Magnitude)
+                plt.vlines(FindMaxNonZero(Input4TimeDefined), 0, Input4Magnitude)
+
+            elif Input4Type == 'Impulse':
+                plt.vlines(0, 0, Input4Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+            
+            else:
+                plt.hlines(Input4Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
+
+                try:
+                    plt.vlines(Input4TimeDefined[0], 0, Input4Magnitude)
+                except:
+                    plt.vlines(0, 0, Input4Magnitude)
+
+            plt.plot(self.Time, Output4, color = 'r',  label = 'TF 4 (Time Delay = {})'.format(Sys4TimeDelay))
+
+            plt.xlabel('Time')
+            plt.ylabel(YUnit + ' (Deviation)')
+            plt.legend(loc = 'best')
+
+            h += 1
+
+        if Output5 is not None:
+            plt.subplot(3,2,h)
+
+            if Input5Type == 'Square':
+                plt.hlines(Input5Magnitude, 0, FindMaxNonZero(Input5TimeDefined), label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
+
+                plt.vlines(0, 0, Input5Magnitude)
+                plt.vlines(FindMaxNonZero(Input5TimeDefined), 0, Input5Magnitude)
+
+            elif Input5Type == 'Impulse':
+                plt.vlines(0, 0, Input5Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+
+            else:
+                plt.hlines(Input5Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
+
+                try:
+                    plt.vlines(Input5TimeDefined[0], 0, Input5Magnitude)
+                except:
+                    plt.vlines(0, 0, Input5Magnitude)     
+
+            plt.plot(self.Time, Output5, color = 'r',  label = 'TF 5 (Time Delay = {})'.format(Sys5TimeDelay))
+
+            plt.xlabel('Time')
+            plt.ylabel(YUnit + ' (Deviation)')
+            plt.legend(loc = 'best')
+
+            h += 1
+
+        if Output6 is not None:
+            plt.subplot(3,2,h)
+
+            if Input6Type == 'Square':
+                plt.hlines(Input6Magnitude, 0, FindMaxNonZero(Input6TimeDefined), label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
+
+                plt.vlines(0, 0, Input6Magnitude)
+                plt.vlines(FindMaxNonZero(Input6TimeDefined), 0, Input6Magnitude)
+
+            
+            elif Input6Type == 'Impulse':
+                plt.vlines(0, 0, Input6Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input6Magnitude))
+
+            else:
+                plt.hlines(Input6Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
+
+                try:
+                    plt.vlines(Input6TimeDefined[0], 0, Input6Magnitude)
+                except:
+                    plt.vlines(0, 0, Input6Magnitude)       
+
+            plt.plot(self.Time, Output6, color = 'r',  label = 'TF 6 (Time Delay = {})'.format(Sys6TimeDelay))
+
+            plt.xlabel('Time')
+            plt.ylabel(YUnit + ' (Deviation)')
+            plt.legend(loc = 'best')
+
+            h += 1
+
+        """
+        Figure 2: Plot all systems at once
+        """
         plt.figure(figsize=(14,12))
         plt.plot(self.Time, self.Output, label = 'TF 1 ({} Input, Magnitude = {}, Time Delay = {})'.format(self.ResponseType, self.ResponseMagnitude, self.TimeDelay))
 
@@ -127,6 +311,12 @@ class ProcessControlandModeling:
 
         if Output4 is not None:
             plt.plot(self.Time, Output4, label = 'TF 4 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input4Type, Input4Magnitude, Sys4TimeDelay))
+
+        if Output5 is not None:
+            plt.plot(self.Time, Output5, label = 'TF 5 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input5Type, Input5Magnitude, Sys5TimeDelay))
+
+        if Output6 is not None:
+            plt.plot(self.Time, Output6, label = 'TF 6 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input6Type, Input6Magnitude, Sys6TimeDelay))
 
         plt.legend()
         plt.xlabel('Time', fontsize = 14)
@@ -146,7 +336,7 @@ def FitFOPDT(Data, M):
         tau   = x[1]
         theta = x[2]
 
-        return [K*M*(1 - np.exp(-np.max((i - theta), 0)/tau)) for i in t]
+        return [K*M*(1 - np.exp(-max(i - theta, 0)/tau)) for i in t]
 
     def ObjectiveFunction(x):
         return sum((Model(x) - Data))**2
@@ -155,7 +345,7 @@ def FitFOPDT(Data, M):
     t = np.linspace(0, len(Data), len(Data))
 
     from scipy.optimize import minimize
-    Guess = [1, 2, 5]
+    Guess = [1, 1, 1]
     solution = minimize(ObjectiveFunction, Guess, bounds = ((0, 10), (0, 10), (0, 10)))
 
     EstimatedParameters = solution.x

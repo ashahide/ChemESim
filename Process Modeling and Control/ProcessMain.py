@@ -1,42 +1,49 @@
 from Process import ProcessControlandModeling
 
-Sys1 = ProcessControlandModeling(Numerator = 1, Denominator = [2, 3, 3])
+Num = 3
 
-Sys2 = ProcessControlandModeling(Numerator = 1, Denominator = [2, 3, 3], TimeDelay=5, N=1)
+Den = [20, 3, 3]
 
-Sys3 = ProcessControlandModeling(Numerator = [1, 1], Denominator = [2, 3, 3])
+Sys1 = ProcessControlandModeling(Numerator = Num, Denominator = Den)
 
-Sys4 = ProcessControlandModeling(Numerator = [1, 1], Denominator = [2, 3, 3])
+Sys2 = ProcessControlandModeling(Numerator = Num, Denominator = Den, TimeDelay=5, N=1)
 
-Sys5 = ProcessControlandModeling(Numerator = 1, Denominator = [2, 3, 3], TimeDelay=5, N=1)
+Sys3 = ProcessControlandModeling(Numerator = Num, Denominator = Den)
+
+Sys4 = ProcessControlandModeling(Numerator = Num, Denominator = Den, TimeDelay=5, N=1)
+
+Sys5 = ProcessControlandModeling(Numerator = Num,  Denominator = Den)
+
+Sys6 = ProcessControlandModeling(Numerator = Num, Denominator = Den, TimeDelay=5, N=1)
 
 
-NumPoints = 150
-TFinal    = 15         
+NumPoints = 200
+TFinal    = 30        
 
-Output1, Time = Sys1.InputFunction(3, NumPoints, TFinal, 'Step')
+Output1, Time1 = Sys1.InputFunction(Num, NumPoints, TFinal, 'Step')
 
-Output2, Time = Sys2.InputFunction(3, NumPoints, TFinal, 'Step')
+Output2, Time = Sys2.InputFunction(Num, NumPoints, TFinal, 'Step')
 
-Output3, Time = Sys3.InputFunction(3, NumPoints, TFinal, 'Step')
+Output3, Time = Sys3.InputFunction(Num, NumPoints, TFinal, 'Impulse')
 
-Output5, Time = Sys5.InputFunction(3, NumPoints, TFinal, 'Step')
-
+Output4, Time = Sys4.InputFunction(Num, NumPoints, TFinal, 'Impulse')
 
 import numpy as np
 
 U = np.zeros_like(Time)
 U[0:10] = 1
 
-Output4, Time = Sys4.InputFunction(3, NumPoints, TFinal, 'Square', T= Time, U = U)
+Output5, Time = Sys5.InputFunction(3, NumPoints, TFinal, 'Square', T= Time1, U = U)
 
-# Sys1.PlotResults(Output2 = Output2, Input2Type = 'Step',  Input2Magnitude = 3, Sys2TimeDelay=0, \
-#                 Output3 = Output3, Input3Type = 'Step',   Input3Magnitude = 3, Sys3TimeDelay=5,  \
-#                 Output4 = Output4, Input4Type = 'Square', Input4Magnitude = 3, Sys4TimeDelay=0, \
-#                 YUnit = 'Concentration')
+Output6, Time = Sys6.InputFunction(3, NumPoints, TFinal, 'Square', T= Time1, U = U)
 
 
-from Process import FitFOPDT
+# Sys1.PlotResults(YUnit = 'Concentration')
 
 
-FitFOPDT(Output5, 3)
+Sys1.PlotResults(Output2 = Output2, Input2Type = 'Step',     Input2Magnitude = 3,   Sys2TimeDelay=5, \
+                Output3 = Output3,  Input3Type = 'Impulse',  Input3Magnitude = 3,   Sys3TimeDelay=0, \
+                Output4 = Output4,  Input4Type = 'Impulse',  Input4Magnitude = 3,   Sys4TimeDelay=5, \
+                Output5 = Output5,  Input5Type = 'Square',   Input5Magnitude = 3,   Input5TimeDefined = U, Sys5TimeDelay=0, \
+                Output6 = Output6,  Input6Type = 'Square',   Input6Magnitude = 3,   Input6TimeDefined = U, Sys6TimeDelay=5, \
+                YUnit = 'Concentration')
