@@ -107,6 +107,57 @@ class TransferFunction:
 
         return Frequencies, Damping, Poles
 
+    def PlotResponse(self):
+        def FindMaxNonZero(a, T):
+            return T[int(max([i for i, e in enumerate(a) if e != 0]))]
+
+        import matplotlib.pyplot as plt 
+        plt.style.use('seaborn-darkgrid')
+
+        if self.InputFunction == 'Square':
+            color = 'g'
+        
+        elif self.InputFunction == 'Impulse':
+            color = 'r'
+
+        else:
+            color = 'b'
+
+        LineWidth = 3
+
+        fig, ax = plt.subplots()
+
+        ax.plot(self.Output, color = color, linewidth = LineWidth, label = "TF")
+        ax.set_ylabel("Output", color = color, fontsize = 14)
+        ax.tick_params(axis = 'y', labelcolor = color, labelsize = 12)
+        ax.set_xlabel('Time', fontsize = 14)
+
+        ax2 = ax.twinx()
+        ax2.set_ylabel("Input", color = 'k', fontsize = 14)
+        ax2.tick_params(axis = 'y', labelcolor = 'k', labelsize = 12)
+
+
+        if self.InputFunction == 'Square':
+            ax2.hlines(self.Magnitude, 0, FindMaxNonZero(self.U, self.T), color = 'k', linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(self.InputFunction, self.Magnitude))
+
+            ax2.vlines(0, 0, self.Magnitude, color = 'k',  linewidth = LineWidth)
+            ax2.vlines(FindMaxNonZero(self.U, self.T), 0, self.Magnitude, color = 'k',  linewidth = LineWidth)
+        
+        elif self.InputFunction == 'Impulse':
+            ax2.vlines(0, 0, self.Magnitude, linewidth = LineWidth, color = 'k', label = 'Impulse Input, Magnitude = {}'.format(self.Magnitude))
+
+        else:
+            ax2.hlines(self.Magnitude, 0, self.Time[-1], color = 'k', linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(self.InputFunction, self.Magnitude))
+            try:
+                ax2.vlines(self.T[0], 0, self.Magnitude, color = 'k',  linewidth = LineWidth)
+            except:
+                ax2.vlines(0, 0, self.Magnitude, color = 'k',  linewidth = LineWidth)
+
+        plt.show()
+
+
+
+
 
 def CompareResults(Sys1, Sys2, Sys3 = None, Sys4 = None, Sys5 = None, Sys6 = None, YUnit = None):
 
@@ -199,10 +250,10 @@ def CompareResults(Sys1, Sys2, Sys3 = None, Sys4 = None, Sys5 = None, Sys6 = Non
         plt.subplot(3,2,h)
         
         if Sys3.InputFunction == 'Square':
-            plt.hlines(Sys3.Magnitude, 0, FindMaxNonZero(Sys3.T), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Sys3.InputFunction, Sys3.Magnitude))
+            plt.hlines(Sys3.Magnitude, 0, FindMaxNonZero(Sys3.U, Sys3.T), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Sys3.InputFunction, Sys3.Magnitude))
 
             plt.vlines(0, 0, Sys3.Magnitude, linewidth = LineWidth)
-            plt.vlines(FindMaxNonZero(Sys3.T), 0, Sys3.Magnitude, linewidth = LineWidth)
+            plt.vlines(FindMaxNonZero(Sys3.U, Sys3.T), 0, Sys3.Magnitude, linewidth = LineWidth)
 
             color = 'g'
 
@@ -231,15 +282,15 @@ def CompareResults(Sys1, Sys2, Sys3 = None, Sys4 = None, Sys5 = None, Sys6 = Non
         plt.subplot(3,2,h)
 
         if Sys4.InputFunction == 'Square':
-            plt.hlines(Sys4.Magnitude, 0, FindMaxNonZero(Sys4.T), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Sys4.InputFunction, Sys4.Magnitude))
+            plt.hlines(Sys4.Magnitude, 0, FindMaxNonZero(Sys4.U, Sys4.T), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Sys4.InputFunction, Sys4.Magnitude))
 
             plt.vlines(0, 0, Sys4.Magnitude, linewidth = LineWidth)
-            plt.vlines(FindMaxNonZero(Sys4.T), 0, Sys4.Magnitude, linewidth = LineWidth)
+            plt.vlines(FindMaxNonZero(Sys4.U, Sys4.T), 0, Sys4.Magnitude, linewidth = LineWidth)
 
             color = 'g'
 
         elif Sys4.InputFunction == 'Impulse':
-            plt.vlines(0, 0, Sys4.Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Sys5.Magnitude))
+            plt.vlines(0, 0, Sys4.Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Sys4.Magnitude))
 
             color = 'r'
         
@@ -408,7 +459,6 @@ def CompareResults(Sys1, Sys2, Sys3 = None, Sys4 = None, Sys5 = None, Sys6 = Non
     plt.show()
 
     return
-
 
 def FitFOPDT(Data, M):
     def Model(x):
