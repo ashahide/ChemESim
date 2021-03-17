@@ -121,7 +121,9 @@ class ProcessControlandModeling:
             self.TimeDelay = 0
   
         import matplotlib.pyplot as plt
-        # plt.style.use('ggplot')
+        plt.style.use('seaborn-darkgrid')
+
+        LineWidth = 3
 
         """
         Figure 1: Plot individual systems wit inputs
@@ -135,23 +137,29 @@ class ProcessControlandModeling:
         plt.subplot(3,2,1)
 
         if self.InputFunction == 'Square':
-            plt.hlines(self.ResponseMagnitude, 0, FindMaxNonZero(self.InputTimeDefined), label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
+            plt.hlines(self.ResponseMagnitude, 0, FindMaxNonZero(self.InputTimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
 
             plt.vlines(0, 0, self.ResponseMagnitude)
-            plt.vlines(FindMaxNonZero(self.InputTimeDefined), 0, self.ResponseMagnitude)
+            plt.vlines(FindMaxNonZero(self.InputTimeDefined), 0, self.ResponseMagnitude,  linewidth = LineWidth)
+        
+            color = 'g'
         
         elif self.InputFunction == 'Impulse':
-            plt.vlines(0, 0, self.ResponseMagnitude, label = 'Impulse Input, Magnitude = {}'.format(self.ResponseMagnitude))
+            plt.vlines(0, 0, self.ResponseMagnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(self.ResponseMagnitude))
+
+            color = 'r'
 
         else:
-            plt.hlines(self.ResponseMagnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
+            plt.hlines(self.ResponseMagnitude, 0, self.Time[-1], linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(self.ResponseType, self.ResponseMagnitude))
             try:
-                plt.vlines(self.InputTimeDefined[0], 0, self.ResponseMagnitude)
+                plt.vlines(self.InputTimeDefined[0], 0, self.ResponseMagnitude,  linewidth = LineWidth)
             except:
-                plt.vlines(0, 0, self.ResponseMagnitude)
+                plt.vlines(0, 0, self.ResponseMagnitude,  linewidth = LineWidth)
+
+            color = 'b'
 
         
-        plt.plot(self.Time, self.Output, color = 'r', label = 'TF 1 (Time Delay = {})'.format(self.TimeDelay))
+        plt.plot(self.Time, self.Output, color = color, linewidth = LineWidth, label = 'TF 1 (Time Delay = {})'.format(self.TimeDelay))
 
         plt.xlabel('Time')
         plt.ylabel(YUnit + ' (Deviation)')
@@ -161,24 +169,30 @@ class ProcessControlandModeling:
             plt.subplot(3,2,h)
 
             if Input2Type == 'Square':
-                plt.hlines(Input2Magnitude, 0, FindMaxNonZero(Input2TimeDefined), label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
+                plt.hlines(Input2Magnitude, 0, FindMaxNonZero(Input2TimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
 
                 plt.vlines(0, 0, Input2Magnitude)
-                plt.vlines(FindMaxNonZero(Input2TimeDefined), 0, Input2Magnitude)
+                plt.vlines(FindMaxNonZero(Input2TimeDefined), 0, Input2Magnitude, linewidth = LineWidth)
+
+                color = 'g'
 
             elif Input2Type == 'Impulse':
-                plt.vlines(0, 0, Input2Magnitude)
+                plt.vlines(0, 0, Input2Magnitude, linewidth = LineWidth)
+
+                color = 'r'
 
             else:
-                plt.hlines(Input2Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
+                plt.hlines(Input2Magnitude, 0, self.Time[-1], linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input2Type, Input2Magnitude))
 
                 try:
-                    plt.vlines(Input2TimeDefined[0], 0, Input2Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input2Magnitude))
+                    plt.vlines(Input2TimeDefined[0], 0, Input2Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Input2Magnitude))
                 except:
-                    plt.vlines(0, 0, Input2Magnitude)                
+                    plt.vlines(0, 0, Input2Magnitude, linewidth = LineWidth)     
+
+                color = 'b'          
 
             
-            plt.plot(self.Time, Output2, color = 'r',  label = 'TF 2 (Time Delay = {})'.format(Sys2TimeDelay))
+            plt.plot(self.Time, Output2, color = color, linewidth = LineWidth,  label = 'TF 2 (Time Delay = {})'.format(Sys2TimeDelay))
 
             plt.xlabel('Time')
             plt.ylabel(YUnit + ' (Deviation)')
@@ -190,21 +204,27 @@ class ProcessControlandModeling:
             plt.subplot(3,2,h)
             
             if Input3Type == 'Square':
-                plt.hlines(Input3Magnitude, 0, FindMaxNonZero(Input3TimeDefined), label = '{} Input, Magnitude = {}'.format(Input3Type, Input3Magnitude))
+                plt.hlines(Input3Magnitude, 0, FindMaxNonZero(Input3TimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input3Type, Input3Magnitude))
 
-                plt.vlines(0, 0, Input3Magnitude)
-                plt.vlines(FindMaxNonZero(Input3TimeDefined), 0, Input3Magnitude)
+                plt.vlines(0, 0, Input3Magnitude, linewidth = LineWidth)
+                plt.vlines(FindMaxNonZero(Input3TimeDefined), 0, Input3Magnitude, linewidth = LineWidth)
+
+                color = 'g'
 
             elif Input3Type == 'Impulse':
-                plt.vlines(0, 0, Input3Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input3Magnitude))
+                plt.vlines(0, 0, Input3Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Input3Magnitude))
+
+                color = 'r'
             
             else:
                 try:
-                    plt.vlines(Input3TimeDefined[0], 0, Input3Magnitude)
+                    plt.vlines(Input3TimeDefined[0], 0, Input3Magnitude ,linewidth = LineWidth)
                 except:
-                    plt.vlines(0, 0, Input3Magnitude)
+                    plt.vlines(0, 0, Input3Magnitude, linewidth = LineWidth)
 
-            plt.plot(self.Time, Output3, color = 'r',  label = 'TF 3 (Time Delay = {})'.format(Sys3TimeDelay))
+                color = 'b'
+
+            plt.plot(self.Time, Output3, color = color, linewidth = LineWidth,  label = 'TF 3 (Time Delay = {})'.format(Sys3TimeDelay))
 
             plt.xlabel('Time')
             plt.ylabel(YUnit + ' (Deviation)')
@@ -216,23 +236,29 @@ class ProcessControlandModeling:
             plt.subplot(3,2,h)
 
             if Input4Type == 'Square':
-                plt.hlines(Input4Magnitude, 0, FindMaxNonZero(Input4TimeDefined), label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
+                plt.hlines(Input4Magnitude, 0, FindMaxNonZero(Input4TimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
 
-                plt.vlines(0, 0, Input4Magnitude)
-                plt.vlines(FindMaxNonZero(Input4TimeDefined), 0, Input4Magnitude)
+                plt.vlines(0, 0, Input4Magnitude, linewidth = LineWidth)
+                plt.vlines(FindMaxNonZero(Input4TimeDefined), 0, Input4Magnitude, linewidth = LineWidth)
+
+                color = 'g'
 
             elif Input4Type == 'Impulse':
-                plt.vlines(0, 0, Input4Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+                plt.vlines(0, 0, Input4Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+
+                color = 'r'
             
             else:
-                plt.hlines(Input4Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
+                plt.hlines(Input4Magnitude, 0, self.Time[-1], linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input4Type, Input4Magnitude))
 
                 try:
-                    plt.vlines(Input4TimeDefined[0], 0, Input4Magnitude)
+                    plt.vlines(Input4TimeDefined[0], 0, Input4Magnitude, linewidth = LineWidth)
                 except:
-                    plt.vlines(0, 0, Input4Magnitude)
+                    plt.vlines(0, 0, Input4Magnitude, linewidth = LineWidth)
 
-            plt.plot(self.Time, Output4, color = 'r',  label = 'TF 4 (Time Delay = {})'.format(Sys4TimeDelay))
+                color = 'b'
+
+            plt.plot(self.Time, Output4, color = color, linewidth = LineWidth,  label = 'TF 4 (Time Delay = {})'.format(Sys4TimeDelay))
 
             plt.xlabel('Time')
             plt.ylabel(YUnit + ' (Deviation)')
@@ -244,23 +270,29 @@ class ProcessControlandModeling:
             plt.subplot(3,2,h)
 
             if Input5Type == 'Square':
-                plt.hlines(Input5Magnitude, 0, FindMaxNonZero(Input5TimeDefined), label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
+                plt.hlines(Input5Magnitude, 0, FindMaxNonZero(Input5TimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
 
-                plt.vlines(0, 0, Input5Magnitude)
-                plt.vlines(FindMaxNonZero(Input5TimeDefined), 0, Input5Magnitude)
+                plt.vlines(0, 0, Input5Magnitude, linewidth = LineWidth)
+                plt.vlines(FindMaxNonZero(Input5TimeDefined), 0, Input5Magnitude, linewidth = LineWidth)
+
+                color = 'g'
 
             elif Input5Type == 'Impulse':
-                plt.vlines(0, 0, Input5Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+                plt.vlines(0, 0, Input5Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Input5Magnitude))
+
+                color = 'r'
 
             else:
-                plt.hlines(Input5Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
+                plt.hlines(Input5Magnitude, 0, self.Time[-1], linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input5Type, Input5Magnitude))
 
                 try:
-                    plt.vlines(Input5TimeDefined[0], 0, Input5Magnitude)
+                    plt.vlines(Input5TimeDefined[0], 0, Input5Magnitude, linewidth = LineWidth)
                 except:
-                    plt.vlines(0, 0, Input5Magnitude)     
+                    plt.vlines(0, 0, Input5Magnitude, linewidth = LineWidth)     
 
-            plt.plot(self.Time, Output5, color = 'r',  label = 'TF 5 (Time Delay = {})'.format(Sys5TimeDelay))
+                color = 'b'
+
+            plt.plot(self.Time, Output5, color = color, linewidth = LineWidth,  label = 'TF 5 (Time Delay = {})'.format(Sys5TimeDelay))
 
             plt.xlabel('Time')
             plt.ylabel(YUnit + ' (Deviation)')
@@ -272,24 +304,29 @@ class ProcessControlandModeling:
             plt.subplot(3,2,h)
 
             if Input6Type == 'Square':
-                plt.hlines(Input6Magnitude, 0, FindMaxNonZero(Input6TimeDefined), label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
+                plt.hlines(Input6Magnitude, 0, FindMaxNonZero(Input6TimeDefined), linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
 
-                plt.vlines(0, 0, Input6Magnitude)
-                plt.vlines(FindMaxNonZero(Input6TimeDefined), 0, Input6Magnitude)
-
+                plt.vlines(0, 0, Input6Magnitude, linewidth = LineWidth)
+                plt.vlines(FindMaxNonZero(Input6TimeDefined), 0, Input6Magnitude, linewidth = LineWidth)
+                
+                color = 'g'
             
             elif Input6Type == 'Impulse':
-                plt.vlines(0, 0, Input6Magnitude, label = 'Impulse Input, Magnitude = {}'.format(Input6Magnitude))
+                plt.vlines(0, 0, Input6Magnitude, linewidth = LineWidth, label = 'Impulse Input, Magnitude = {}'.format(Input6Magnitude))
+
+                color = 'r'
 
             else:
-                plt.hlines(Input6Magnitude, 0, self.Time[-1], label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
+                plt.hlines(Input6Magnitude, 0, self.Time[-1], linewidth = LineWidth, label = '{} Input, Magnitude = {}'.format(Input6Type, Input6Magnitude))
 
                 try:
-                    plt.vlines(Input6TimeDefined[0], 0, Input6Magnitude)
+                    plt.vlines(Input6TimeDefined[0], 0, Input6Magnitude, linewidth = LineWidth)
                 except:
-                    plt.vlines(0, 0, Input6Magnitude)       
+                    plt.vlines(0, 0, Input6Magnitude, linewidth = LineWidth)       
 
-            plt.plot(self.Time, Output6, color = 'r',  label = 'TF 6 (Time Delay = {})'.format(Sys6TimeDelay))
+                color = 'b'
+
+            plt.plot(self.Time, Output6, color = color, linewidth = LineWidth,  label = 'TF 6 (Time Delay = {})'.format(Sys6TimeDelay))
 
             plt.xlabel('Time')
             plt.ylabel(YUnit + ' (Deviation)')
@@ -300,23 +337,66 @@ class ProcessControlandModeling:
         """
         Figure 2: Plot all systems at once
         """
+
+        def SelectColor(Type):
+            if Type == 'Square':
+                color = 'g'
+
+            elif Type == 'Impulse':
+                color = 'r'
+
+            elif Type == 'Step':
+                color = 'b'
+
+            return color
+
+        StyleList = ['-', '--', '-o', '-x', '-+', '-*']
+        ColorList = []
+
         plt.figure(figsize=(14,12))
-        plt.plot(self.Time, self.Output, label = 'TF 1 ({} Input, Magnitude = {}, Time Delay = {})'.format(self.ResponseType, self.ResponseMagnitude, self.TimeDelay))
+
+        ColorList.append(SelectColor(self.ResponseType))
+
+        style = StyleList[ColorList.count(SelectColor(self.ResponseType)) - 1]
+        
+        plt.plot(self.Time, self.Output, SelectColor(self.ResponseType) + style, linewidth = LineWidth, label =  'TF 1 ({} Input, Magnitude = {}, Time Delay = {})'.format(self.ResponseType, self.ResponseMagnitude, self.TimeDelay))
+
+        
 
         if Output2 is not None:
-            plt.plot(self.Time, Output2, label = 'TF 2 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input2Type, Input2Magnitude, Sys2TimeDelay))
+            ColorList.append(SelectColor(Input2Type))
+
+            style = StyleList[ColorList.count(SelectColor(Input2Type)) - 1]
+
+            plt.plot(self.Time, Output2, SelectColor(Input2Type) + style, linewidth = LineWidth, label = 'TF 2 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input2Type, Input2Magnitude, Sys2TimeDelay))
 
         if Output3 is not None:
-            plt.plot(self.Time, Output3, label = 'TF 3 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input3Type, Input3Magnitude, Sys3TimeDelay))
+            ColorList.append(SelectColor(Input3Type))
+
+            style = StyleList[ColorList.count(SelectColor(Input3Type)) - 1]
+
+            plt.plot(self.Time, Output3,  SelectColor(Input3Type) + style, linewidth = LineWidth, label = 'TF 3 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input3Type, Input3Magnitude, Sys3TimeDelay))
 
         if Output4 is not None:
-            plt.plot(self.Time, Output4, label = 'TF 4 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input4Type, Input4Magnitude, Sys4TimeDelay))
+            ColorList.append(SelectColor(Input4Type))
+
+            style = StyleList[ColorList.count(SelectColor(Input4Type)) - 1]
+
+            plt.plot(self.Time, Output4, SelectColor(Input4Type) + style, linewidth = LineWidth, label = 'TF 4 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input4Type, Input4Magnitude, Sys4TimeDelay))
 
         if Output5 is not None:
-            plt.plot(self.Time, Output5, label = 'TF 5 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input5Type, Input5Magnitude, Sys5TimeDelay))
+            ColorList.append(SelectColor(Input5Type))
+
+            style = StyleList[ColorList.count(SelectColor(Input5Type)) - 1]
+
+            plt.plot(self.Time, Output5, SelectColor(Input5Type) + style, linewidth = LineWidth, label = 'TF 5 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input5Type, Input5Magnitude, Sys5TimeDelay))
 
         if Output6 is not None:
-            plt.plot(self.Time, Output6, label = 'TF 6 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input6Type, Input6Magnitude, Sys6TimeDelay))
+            ColorList.append(SelectColor(Input6Type))
+
+            style = StyleList[ColorList.count(SelectColor(Input6Type)) - 1]
+
+            plt.plot(self.Time, Output6,  SelectColor(Input6Type) + style, linewidth = LineWidth, label = 'TF 6 ({} Input, Magnitude = {}, Time Delay = {})'.format(Input6Type, Input6Magnitude, Sys6TimeDelay))
 
         plt.legend()
         plt.xlabel('Time', fontsize = 14)
