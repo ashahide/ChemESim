@@ -1,3 +1,3 @@
 # ChemESim
 
-![](ChemESimLogo.jpg)
+![](/Images/ChemeESimLogo.jpg)
