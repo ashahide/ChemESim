@@ -2,9 +2,8 @@ class TransferFunction:
 
     """
     Links to cite:
-
-    [1] http://techteach.no/python_control/python_control.pdf
-
+    [1] Python control toolbox from CalTech
+    [2] http://techteach.no/python_control/python_control.pdf
     """
 
     def __init__(self, Numerator, Denominator, TimeDelay = None, N = None):
@@ -12,11 +11,10 @@ class TransferFunction:
         self.Numerator   = Numerator
         self.Denominator = Denominator
         self.TimeDelay   = TimeDelay
-        self.N           = N #for pade approximation [1]
+        self.N           = N #for pade approximation [2]
 
         """
-        Using method for time delay creation from [1]
-
+        Using method for time delay creation from [2]
         """
         import control 
 
@@ -234,7 +232,7 @@ def CompareResults(*Systems, YUnit = None):
         style = StyleList[ColorList.count(SelectColor(Systems[i].Input)) - 1]
     
         plt.plot(Systems[i].Time, Systems[i].Output, SelectColor(Systems[i].Input) + style, linewidth = LineWidth, \
-            label =  'TF 1 ({} Input, Magnitude = {}, Time Delay = {})'.format(Systems[i].Input, Systems[i].Magnitude, Systems[i].TimeDelay))
+            label =  f'TF {i+1} ({Systems[i].Input} Input, Magnitude = {Systems[i].Magnitude}, Time Delay = {Systems[i].TimeDelay})')
 
     
         plt.legend()
@@ -244,48 +242,4 @@ def CompareResults(*Systems, YUnit = None):
             plt.ylabel(YUnit +  ' as Deviation Variable', fontsize = 14)
 
     plt.show()
-
-
-# def FitFOPDT(Data, M):
-#     def Model(x):
-#         import numpy as np 
-#         K     = x[0] 
-#         tau   = x[1]
-#         theta = x[2]
-
-#         return [K*M*(1 - np.exp(-max(i - theta, 0)/tau)) for i in t]
-
-#     def ObjectiveFunction(x):
-#         return sum((Model(x) - Data))**2
-
-#     import numpy as np
-#     t = np.linspace(0, len(Data), len(Data))
-
-#     from scipy.optimize import minimize
-#     Guess = [1, 1, 1]
-#     solution = minimize(ObjectiveFunction, Guess, bounds = ((0, 10), (0, 10), (0, 10)))
-
-#     EstimatedParameters = solution.x
-
-#     print('K = {}'.format(EstimatedParameters[0]))
-#     print('tau = {}'.format(EstimatedParameters[1]))
-#     print('theta = {}'.format(EstimatedParameters[2]))
-
-#     OptimalModelOutput = Model(EstimatedParameters)
-
-#     import matplotlib.pyplot as plt
-
-#     plt.plot(Data, label = 'Process Data')
-#     plt.plot(OptimalModelOutput, label = 'Optimal Model Output')
-
-#     plt.legend()
-
-#     plt.show()
-
-#     return
-  
-
-
-
-
 

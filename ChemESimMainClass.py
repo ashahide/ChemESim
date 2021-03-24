@@ -1,4 +1,4 @@
-from Process import TransferFunction
+from ProcessModelingAndControlClass import TransferFunction
 
 Num = 3
 
@@ -26,10 +26,10 @@ U = np.zeros_like(T)
 
 U[0:50] = 1
 
-Output1, Time1 = Sys1.InputFunction(Num, NumPoints, TFinal, 'Square', T= T, U = U)
+Output1, Time1 = Sys1.InputFunction(Num, NumPoints, TFinal, 'Step')
 
 Output2, Time = Sys2.InputFunction(Num, NumPoints, TFinal, 'Step')
-#
+
 Output3, Time = Sys3.InputFunction(Num, NumPoints, TFinal, 'Impulse')
 
 Output4, Time = Sys4.InputFunction(Num, NumPoints, TFinal, 'Impulse')
@@ -38,10 +38,14 @@ Output5, Time = Sys5.InputFunction(Num, NumPoints, TFinal, 'Square', T= Time1, U
 
 Output6, Time = Sys6.InputFunction(Num, NumPoints, TFinal, 'Square', T= Time1, U = U)
 
-from Process import CompareResults
+Sys1.PlotResponse()
 
-# Sys1.PlotResponse()
+from ProcessModelingAndControlClass import CompareResults
 
-CompareResults(Sys1, Sys2, Sys3, Sys4, Sys5, Sys6, YUnit = 'Concentration')
+CompareResults(Sys1, Sys2, Sys3, Sys4, Sys5, Sys6, YUnit = 'Output')
 
 
+
+
+
+    
